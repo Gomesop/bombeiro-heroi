@@ -281,7 +281,10 @@ class BombeiroApp {
         }
 
         // libera o botão em 5s
+        // (o conteúdo é reconstruído a cada exibição: ao liberar, o <span> do
+        //  contador é substituído e precisa existir de novo na próxima fase)
         const btn = document.getElementById('btn-skip-ad');
+        btn.innerHTML = 'Continuar em <span id="ad-count">5</span>s';
         const cont = document.getElementById('ad-count');
         btn.disabled = true;
         let s = 5;
