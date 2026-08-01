@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Bombeiro Herói | Jogo de Combate a Incêndio — Hora da Segurança</title>
+    <meta name="description" content="Jogo de plataforma em 6 fases: colete extintores, machados e hidrantes, desvie do fogo e dos escombros e responda aos desafios entre as fases. www.horadaseguranca.com">
+    <meta name="theme-color" content="#0b1220">
+    <link rel="icon" type="image/png" href="logo.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- CABEÇALHO -->
+    <header class="app-header">
+        <div class="header-container">
+            <a class="brand-box" href="https://www.horadaseguranca.com" target="_blank" rel="noopener noreferrer" title="Acessar www.horadaseguranca.com">
+                <img src="logo.png" alt="Logo Hora da Segurança" class="header-logo">
+                <span class="brand-text">
+                    <span class="brand-title">BOMBEIRO HERÓI</span>
+                    <span class="brand-tagline">Combate a incêndio · Hora da Segurança</span>
+                </span>
+            </a>
+            <a href="https://www.horadaseguranca.com" target="_blank" rel="noopener noreferrer" class="site-link-btn">
+                🌐 www.horadaseguranca.com
+            </a>
+        </div>
+    </header>
+
+    <main class="main-content">
+
+        <!-- ============ TELA: CADASTRO ============ -->
+        <section id="screen-welcome" class="screen active">
+            <div class="hero-card">
+                <a href="https://www.horadaseguranca.com" target="_blank" rel="noopener noreferrer" class="hero-logo-link">
+                    <img src="logo.png" alt="Logo Oficial Hora da Segurança" class="hero-logo-img">
+                </a>
+
+                <span class="hero-eyebrow">🚒 Jogo de treinamento</span>
+                <h1 class="hero-title">Bombeiro <mark>Herói</mark></h1>
+                <p class="hero-subtitle">
+                    Seis fases de corrida contra o fogo. Recolha equipamentos de combate a incêndio,
+                    desvie dos perigos e prove seus conhecimentos nos desafios entre as fases.
+                </p>
+
+                <div class="how-grid">
+                    <div class="how-card">
+                        <span class="how-ico">🧯</span>
+                        <strong>Colete</strong>
+                        <p>Extintor, machado, hidrante, mangueira, máscara e mais.</p>
+                    </div>
+                    <div class="how-card">
+                        <span class="how-ico">🔥</span>
+                        <strong>Desvie</strong>
+                        <p>Fogo, escombros, veículos, barris e fiação energizada.</p>
+                    </div>
+                    <div class="how-card">
+                        <span class="how-ico">🧠</span>
+                        <strong>Responda</strong>
+                        <p>Desafio de arrastar entre uma fase e outra.</p>
+                    </div>
+                    <div class="how-card">
+                        <span class="how-ico">⚡</span>
+                        <strong>Acelere</strong>
+                        <p>A cada fase o ritmo aumenta. Aguenta até a refinaria?</p>
+                    </div>
+                </div>
+
+                <div class="controls-hint">
+                    <div class="ch-item"><span class="key">Espaço</span><span class="key">↑</span><span>pular</span></div>
+                    <div class="ch-item"><span class="key">↓</span><span>agachar (passa sob fiação e fumaça)</span></div>
+                    <div class="ch-item"><span class="key">📱</span><span>no celular, use os botões na tela</span></div>
+                </div>
+
+                <form id="form-register" class="setup-box" novalidate>
+                    <h3>📝 Identifique-se para começar</h3>
+
+                    <div class="input-group">
+                        <label for="reg-name">👤 Nome completo</label>
+                        <input type="text" id="reg-name" placeholder="Ex: João Pedro Alves" autocomplete="name" maxlength="60">
+                    </div>
+                    <div class="input-group">
+                        <label for="reg-email">✉️ E-mail</label>
+                        <input type="email" id="reg-email" placeholder="Ex: joao.alves@empresa.com.br" autocomplete="email" maxlength="100">
+                    </div>
+                    <div class="input-group">
+                        <label for="reg-company">🏢 Empresa / instituição</label>
+                        <input type="text" id="reg-company" placeholder="Ex: Brigada Industrial Ltda." autocomplete="organization" maxlength="80">
+                    </div>
+
+                    <div id="setup-error" class="setup-error hidden"></div>
+
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">🚒 Começar a missão</button>
+
+                    <p class="privacy-note">🔒 Seus dados (nome, e-mail, empresa, data e pontuação) são registrados apenas para controle de participação.</p>
+                </form>
+
+                <a class="marketing-banner" href="https://www.horadaseguranca.com" target="_blank" rel="noopener noreferrer">
+                    <span>Treinamentos de brigada de incêndio, NRs e SST para a sua empresa</span>
+                    <strong>Acesse www.horadaseguranca.com 🚀</strong>
+                </a>
+            </div>
+        </section>
+
+
+        <!-- ============ TELA: BRIEFING DA FASE ============ -->
+        <section id="screen-briefing" class="screen">
+            <div class="briefing-card">
+                <div class="brief-badge" id="brief-badge">FASE 1 DE 6</div>
+                <div class="brief-ico" id="brief-ico">🚒</div>
+                <h2 class="brief-title" id="brief-title">Rua Residencial</h2>
+                <p class="brief-sub" id="brief-sub">Princípio de incêndio em residência</p>
+                <p class="brief-text" id="brief-text"></p>
+
+                <div class="brief-stats">
+                    <div><span id="brief-dur">40</span><small>segundos</small></div>
+                    <div><span id="brief-vel">1x</span><small>ritmo</small></div>
+                    <div><span id="brief-lives">❤️❤️❤️</span><small>vidas</small></div>
+                </div>
+
+                <button id="btn-start-phase" class="btn btn-primary btn-lg btn-block">▶️ Entrar em ação</button>
+            </div>
+        </section>
+
+
+        <!-- ============ TELA: JOGO ============ -->
+        <section id="screen-game" class="screen">
+            <div class="game-hud">
+                <div class="hud-left">
+                    <span class="hud-phase" id="hud-phase">Fase 1</span>
+                    <span class="hud-scene" id="hud-scene">Rua Residencial</span>
+                </div>
+                <div class="hud-center">
+                    <div class="time-bar"><div id="time-fill" class="time-fill"></div></div>
+                    <span class="hud-time"><strong id="hud-time">40</strong>s</span>
+                </div>
+                <div class="hud-right">
+                    <span class="hud-lives" id="hud-lives">❤️❤️❤️</span>
+                    <span class="hud-score"><strong id="hud-score">0</strong> pts</span>
+                    <button id="btn-sound" class="btn-icon" title="Som">🔊</button>
+                </div>
+            </div>
+
+            <div class="stage-wrap">
+                <canvas id="game-canvas" width="900" height="420" aria-label="Área do jogo"></canvas>
+                <div id="toast" class="toast hidden"></div>
+                <div id="countdown" class="countdown hidden"></div>
+            </div>
+
+            <div class="touch-controls">
+                <button id="btn-duck" class="tbtn tbtn-duck">▼ AGACHAR</button>
+                <button id="btn-jump" class="tbtn tbtn-jump">▲ PULAR</button>
+            </div>
+        </section>
+
+
+        <!-- ============ TELA: PUBLICIDADE ============ -->
+        <section id="screen-ad" class="screen">
+            <div class="ad-card" id="ad-card">
+                <span class="ad-tag">Espaço publicitário</span>
+                <div class="ad-brand">
+                    <div class="ad-logo" id="ad-logo">PS</div>
+                    <div class="ad-brand-text">
+                        <strong id="ad-name">ProSeg Soluções</strong>
+                        <span id="ad-segment">Revenda de EPI</span>
+                    </div>
+                </div>
+                <p class="ad-tagline" id="ad-tagline"></p>
+                <p class="ad-claim" id="ad-claim"></p>
+                <div class="ad-chips" id="ad-chips"></div>
+                <a id="ad-cta" class="btn btn-ad" href="https://www.horadaseguranca.com" target="_blank" rel="noopener noreferrer">Saiba mais</a>
+                <p class="ad-demo-note" id="ad-demo-note"></p>
+                <div class="ad-footer">
+                    Espaço publicitário distribuído por
+                    <a href="https://www.horadaseguranca.com" target="_blank" rel="noopener noreferrer">www.horadaseguranca.com</a>
+                </div>
+                <button id="btn-skip-ad" class="btn btn-ghost btn-block" disabled>Continuar em <span id="ad-count">5</span>s</button>
+            </div>
+        </section>
+
+
+        <!-- ============ TELA: QUIZ ARRASTAR ============ -->
+        <section id="screen-quiz" class="screen">
+            <div class="quiz-card">
+                <span class="quiz-badge">Desafio entre fases</span>
+                <h2 class="quiz-title" id="quiz-title">Classes de incêndio</h2>
+                <p class="quiz-text" id="quiz-text"></p>
+
+                <div class="quiz-pool" id="quiz-pool"></div>
+                <div class="quiz-targets" id="quiz-targets"></div>
+
+                <div id="quiz-feedback" class="quiz-feedback hidden"></div>
+                <button id="btn-quiz-next" class="btn btn-primary btn-lg btn-block hidden">Seguir para a próxima fase ➔</button>
+                <p class="quiz-help">🖱️ Arraste os cartões · 📱 no celular, toque no item e depois no destino</p>
+            </div>
+        </section>
+
+
+        <!-- ============ TELA: FIM ============ -->
+        <section id="screen-end" class="screen">
+            <div class="end-card">
+                <div class="end-ico" id="end-ico">🏆</div>
+                <h1 class="end-title" id="end-title">Missão cumprida!</h1>
+                <p class="end-sub" id="end-sub"></p>
+
+                <div class="end-score">
+                    <span class="es-label">Pontuação final</span>
+                    <div class="es-value" id="end-score">0</div>
+                    <div class="es-rank" id="end-rank">—</div>
+                </div>
+
+                <div class="end-metrics">
+                    <div><span id="m-phases">0</span><small>fases vencidas</small></div>
+                    <div><span id="m-items">0</span><small>equipamentos</small></div>
+                    <div><span id="m-dodge">0</span><small>perigos evitados</small></div>
+                    <div><span id="m-quiz">0%</span><small>acerto no quiz</small></div>
+                </div>
+
+                <div class="end-actions">
+                    <button id="btn-restart" class="btn btn-primary btn-lg">🔄 Jogar novamente</button>
+                </div>
+
+                <a class="end-cta" href="https://www.horadaseguranca.com" target="_blank" rel="noopener noreferrer">
+                    <img src="logo.png" alt="Hora da Segurança" class="end-cta-logo">
+                    <span>
+                        <strong>Leve o treinamento de brigada para a sua equipe</strong>
+                        Cursos de NRs, combate a incêndio e gestão preventiva — www.horadaseguranca.com ↗
+                    </span>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="gameData.js"></script>
+    <script src="audio.js"></script>
+    <script src="sheets.js"></script>
+    <script src="engine.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
