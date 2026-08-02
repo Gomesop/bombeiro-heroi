@@ -233,7 +233,11 @@ const ANUNCIOS = [
         claim: 'Linha completa de extintores, mangueiras, EPIs e sinalização de emergência com laudo e ART.',
         beneficios: ['Recarga e teste hidrostático', 'Projeto e AVCB', 'Entrega em todo o Brasil'],
         cta: 'Conhecer a ProSeg',
-        url: 'https://www.horadaseguranca.com',
+        // Anunciante real: colocar aqui o site da empresa.
+        // Como esta é a marca de demonstração, o clique leva à página do espaço publicitário.
+        url: 'anuncie.html',
+        novaAba: false,
+        icone: '🧯',
         cor1: '#c2410c',
         cor2: '#7c2d12',
         cor3: '#fb923c'

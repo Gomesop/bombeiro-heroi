@@ -258,8 +258,22 @@ class BombeiroApp {
         card.style.background =
             `radial-gradient(circle at 88% 8%, ${a.cor3}55 0%, transparent 55%), linear-gradient(150deg, ${a.cor1} 0%, ${a.cor2} 100%)`;
 
-        document.getElementById('ad-logo').textContent = a.iniciais;
-        document.getElementById('ad-logo').style.color = a.cor1;
+        // Logotipo desenhado em SVG: escudo com as iniciais + ícone do segmento.
+        // (marca tipográfica provisória — substituída pelo logo oficial do anunciante)
+        document.getElementById('ad-logo').innerHTML = `
+            <svg viewBox="0 0 100 100" width="100%" height="100%" aria-label="${a.marca}">
+                <defs>
+                    <linearGradient id="adg" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0" stop-color="${a.cor3}"/>
+                        <stop offset="1" stop-color="${a.cor1}"/>
+                    </linearGradient>
+                </defs>
+                <path d="M50 6 L88 20 V50c0 22-16 36-38 44C28 86 12 72 12 50V20Z" fill="url(#adg)"/>
+                <path d="M50 15 L79 26 V50c0 17-12 28-29 34C33 78 21 67 21 50V26Z" fill="#ffffff" opacity=".93"/>
+                <text x="50" y="52" text-anchor="middle" font-family="Outfit, sans-serif"
+                      font-size="30" font-weight="900" fill="${a.cor1}">${a.iniciais}</text>
+                <text x="50" y="74" text-anchor="middle" font-size="19">${a.icone || '★'}</text>
+            </svg>`;
         document.getElementById('ad-name').textContent = a.marca;
         document.getElementById('ad-segment').textContent = a.segmento;
         document.getElementById('ad-tagline').textContent = a.tagline;
@@ -268,13 +282,24 @@ class BombeiroApp {
         document.getElementById('ad-chips').innerHTML =
             a.beneficios.map(b => `<span class="ad-chip">${b}</span>`).join('');
 
+        // CTA vai para o site do anunciante. Link interno (demonstração) abre na
+        // mesma aba; site externo abre em nova aba.
         const cta = document.getElementById('ad-cta');
         cta.textContent = a.cta;
         cta.href = a.url;
+        const externo = /^https?:\/\//i.test(a.url);
+        if (externo && a.novaAba !== false) {
+            cta.target = '_blank';
+            cta.rel = 'noopener noreferrer';
+        } else {
+            cta.removeAttribute('target');
+            cta.removeAttribute('rel');
+        }
 
         const nota = document.getElementById('ad-demo-note');
         if (a.demonstracao) {
-            nota.innerHTML = 'Marca fictícia usada como demonstração deste espaço. <strong>Quer anunciar aqui?</strong> Fale com a Hora da Segurança.';
+            nota.innerHTML = 'Marca fictícia, usada só para demonstrar este espaço. ' +
+                             '<a href="anuncie.html">Quer anunciar aqui?</a>';
             nota.classList.remove('hidden');
         } else {
             nota.classList.add('hidden');

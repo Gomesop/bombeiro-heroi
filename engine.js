@@ -465,33 +465,59 @@ class BombeiroEngine {
             c.scale(1 + p * 0.5, 1 + p * 0.5);
         }
 
+        c.textAlign = 'center';
+        c.textBaseline = 'middle';
+
         if (o.tipo === 'item') {
             const flut = Math.sin(o.fase * 4) * 5;
             c.translate(0, flut);
-            c.fillStyle = 'rgba(250, 204, 21, 0.28)';
-            c.beginPath(); c.arc(0, 0, 27, 0, Math.PI * 2); c.fill();
-            c.strokeStyle = 'rgba(250, 204, 21, 0.85)'; c.lineWidth = 2.5;
-            c.beginPath(); c.arc(0, 0, 27, 0, Math.PI * 2); c.stroke();
-            c.font = '30px serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+
+            // brilho suave, sem contorno duro
+            const g = c.createRadialGradient(0, 0, 4, 0, 0, 34);
+            g.addColorStop(0,   'rgba(255, 236, 150, 0.55)');
+            g.addColorStop(0.55,'rgba(250, 204, 21, 0.22)');
+            g.addColorStop(1,   'rgba(250, 204, 21, 0)');
+            c.fillStyle = g;
+            c.beginPath(); c.arc(0, 0, 34, 0, Math.PI * 2); c.fill();
+
+            // ícone grande e nítido
+            c.font = '44px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",serif';
+            c.shadowColor = 'rgba(0,0,0,0.85)';
+            c.shadowBlur = 7;
+            c.shadowOffsetY = 2;
             c.fillText(o.dados.icone, 0, 1);
+            c.shadowBlur = 0; c.shadowOffsetY = 0;
+
         } else {
+            const tam = Math.max(o.alt, 46) * 1.25;
+
             if (o.dados.id === 'fogo') {
                 const f = Math.sin(o.fase * 12) * 3;
-                c.fillStyle = 'rgba(239,68,68,0.35)';
-                c.beginPath(); c.ellipse(0, 6, o.larg * 0.7, o.alt * 0.6, 0, 0, Math.PI * 2); c.fill();
-                c.font = `${o.alt + f}px serif`;
+                const g = c.createRadialGradient(0, 6, 3, 0, 6, o.larg * 0.9);
+                g.addColorStop(0, 'rgba(255, 170, 60, 0.5)');
+                g.addColorStop(1, 'rgba(239, 68, 68, 0)');
+                c.fillStyle = g;
+                c.beginPath(); c.ellipse(0, 6, o.larg * 0.9, o.alt * 0.75, 0, 0, Math.PI * 2); c.fill();
+                c.font = `${tam + f}px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",serif`;
             } else {
-                c.fillStyle = 'rgba(0,0,0,0.2)';
-                c.beginPath(); c.ellipse(0, o.alt / 2 + 4, o.larg * 0.5, 7, 0, 0, Math.PI * 2); c.fill();
-                c.font = `${o.alt}px serif`;
+                // sombra discreta no chão
+                c.fillStyle = 'rgba(0,0,0,0.22)';
+                c.beginPath(); c.ellipse(0, o.alt / 2 + 5, o.larg * 0.45, 6, 0, 0, Math.PI * 2); c.fill();
+                c.font = `${tam}px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",serif`;
             }
-            c.textAlign = 'center'; c.textBaseline = 'middle';
+
+            c.shadowColor = 'rgba(0,0,0,0.9)';
+            c.shadowBlur = 8;
+            c.shadowOffsetY = 2;
             c.fillText(o.dados.icone, 0, 0);
+            c.shadowBlur = 0; c.shadowOffsetY = 0;
 
             if (o.dados.alto) {   // sinaliza que precisa agachar
-                c.font = 'bold 15px sans-serif';
+                c.font = 'bold 17px sans-serif';
                 c.fillStyle = '#fde047';
-                c.fillText('▼', 0, o.alt / 2 + 18);
+                c.shadowColor = 'rgba(0,0,0,0.9)'; c.shadowBlur = 5;
+                c.fillText('▼', 0, o.alt / 2 + 20);
+                c.shadowBlur = 0;
             }
         }
         c.restore();
@@ -499,73 +525,194 @@ class BombeiroEngine {
 
     /* --- o bombeiro --- */
     heroi(c) {
-        const x = this.heroX;
-        const y = this.heroY;
         const agacha = this.agachado && this.noChao;
 
         c.save();
-        c.translate(x, y);
-        if (this.invuln > 0 && Math.floor(this.invuln * 12) % 2 === 0) c.globalAlpha = 0.4;
+        c.translate(this.heroX, this.heroY);
+        if (this.invuln > 0 && Math.floor(this.invuln * 12) % 2 === 0) c.globalAlpha = 0.42;
 
-        // sombra
-        c.fillStyle = 'rgba(0,0,0,0.28)';
-        c.beginPath(); c.ellipse(0, 4, 24, 7, 0, 0, Math.PI * 2); c.fill();
+        // sombra no chão
+        c.fillStyle = 'rgba(0,0,0,0.3)';
+        c.beginPath(); c.ellipse(0, 3, 26, 7, 0, 0, Math.PI * 2); c.fill();
 
-        const esc = agacha ? 0.62 : 1;
-        c.scale(1, esc);
+        c.scale(1, agacha ? 0.66 : 1);
 
-        const passo = Math.sin(this.correndo) * (this.noChao ? 1 : 0.25);
+        // ciclo de corrida
+        const t = this.correndo;
+        const noAr = !this.noChao;
+        const passoA = noAr ?  0.55 : Math.sin(t);
+        const passoB = noAr ? -0.35 : Math.sin(t + Math.PI);
+        const balanco = noAr ? 0 : Math.abs(Math.sin(t)) * 2;   // sobe e desce do tronco
 
-        // pernas (calça escura + faixa refletiva)
-        c.fillStyle = '#1f2937';
-        c.fillRect(-13, -26, 11, 26 + passo * 5);
-        c.fillRect(3, -26, 11, 26 - passo * 5);
-        c.fillStyle = '#fbbf24';
-        c.fillRect(-13, -12, 11, 4);
-        c.fillRect(3, -12, 11, 4);
+        const CASACO   = '#b45309';   // bege-caramelo da farda de aproximação
+        const CASACO_S = '#8a3f07';
+        const REFLET   = '#fde047';   // faixa refletiva amarelo-limão
+        const PRATA    = '#e2e8f0';
+        const CALCA    = '#334155';
+        const CALCA_S  = '#1e293b';
+        const PELE     = '#f0c49b';
 
-        // botas
-        c.fillStyle = '#111827';
-        c.fillRect(-15, -3 + passo * 5, 14, 5);
-        c.fillRect(2, -3 - passo * 5, 14, 5);
+        c.save();
+        c.translate(0, -balanco);
 
-        // casaco
-        c.fillStyle = '#c2410c';
-        this.arred(c, -17, -60, 34, 36, 7); c.fill();
-        // faixas refletivas
-        c.fillStyle = '#fde68a';
-        c.fillRect(-17, -46, 34, 5);
-        c.fillRect(-17, -35, 34, 5);
-        // gola
-        c.fillStyle = '#9a3412';
-        c.fillRect(-17, -60, 34, 6);
+        /* ---------- PERNA DE TRÁS ---------- */
+        this.perna(c, -4, -30, passoB, CALCA_S, '#0f172a', REFLET);
 
-        // cilindro nas costas
+        /* ---------- BRAÇO DE TRÁS ---------- */
+        this.braco(c, -12, -62, -passoB, CASACO_S, PELE, REFLET);
+
+        /* ---------- CILINDRO DE AR (costas) ---------- */
+        c.fillStyle = '#64748b';
+        this.arred(c, -25, -64, 11, 30, 5); c.fill();
+        c.fillStyle = '#94a3b8';
+        this.arred(c, -23, -62, 4, 26, 2); c.fill();
         c.fillStyle = '#475569';
-        this.arred(c, -25, -56, 9, 26, 4); c.fill();
+        c.fillRect(-25, -66, 11, 4);
+        // mangueira até a máscara
+        c.strokeStyle = '#1e293b'; c.lineWidth = 2.5; c.lineCap = 'round';
+        c.beginPath();
+        c.moveTo(-19, -62);
+        c.quadraticCurveTo(-20, -74, -8, -76);
+        c.stroke();
 
-        // braço
-        c.fillStyle = '#9a3412';
-        c.fillRect(12, -56, 9, 22 + passo * 4);
-        c.fillStyle = '#fde68a';
-        c.fillRect(12, -42, 9, 4);
+        /* ---------- PERNA DA FRENTE ---------- */
+        this.perna(c, 4, -30, passoA, CALCA, '#111827', REFLET);
 
-        // cabeça
-        c.fillStyle = '#f5c9a4';
-        c.beginPath(); c.arc(0, -70, 11, 0, Math.PI * 2); c.fill();
+        /* ---------- TRONCO / CASACO ---------- */
+        c.fillStyle = CASACO;
+        this.arred(c, -16, -66, 32, 38, 9); c.fill();
+        // sombreado lateral
+        c.fillStyle = 'rgba(0,0,0,0.16)';
+        this.arred(c, -16, -66, 9, 38, 9); c.fill();
 
-        // capacete de bombeiro
+        // faixas refletivas (prata entre duas amarelas — padrão real)
+        c.fillStyle = REFLET; c.fillRect(-16, -50, 32, 3.5);
+        c.fillStyle = PRATA;  c.fillRect(-16, -46.5, 32, 4);
+        c.fillStyle = REFLET; c.fillRect(-16, -42.5, 32, 3.5);
+        // faixa vertical no peito
+        c.fillStyle = PRATA; c.fillRect(3, -66, 4.5, 16);
+
+        // gola alta
+        c.fillStyle = CASACO_S;
+        this.arred(c, -16, -68, 32, 8, 4); c.fill();
+
+        // cinto com fivela
+        c.fillStyle = '#1f2937'; c.fillRect(-16, -32, 32, 5);
+        c.fillStyle = '#facc15'; c.fillRect(-3, -32.5, 7, 6);
+
+        /* ---------- CABEÇA ---------- */
+        // pescoço
+        c.fillStyle = '#d9a87b'; c.fillRect(-4, -72, 8, 6);
+
+        // rosto
+        c.fillStyle = PELE;
+        c.beginPath(); c.ellipse(1, -78, 10, 11, 0, 0, Math.PI * 2); c.fill();
+        // queixo/mandíbula sombreada
+        c.fillStyle = 'rgba(0,0,0,0.08)';
+        c.beginPath(); c.ellipse(-3, -76, 5, 9, 0, 0, Math.PI * 2); c.fill();
+
+        // olho e sobrancelha
+        c.fillStyle = '#1f2937';
+        c.beginPath(); c.ellipse(5, -79, 1.7, 2.2, 0, 0, Math.PI * 2); c.fill();
+        c.strokeStyle = '#7c3f16'; c.lineWidth = 1.6;
+        c.beginPath(); c.moveTo(2.5, -83); c.lineTo(7.5, -82.5); c.stroke();
+        // boca
+        c.strokeStyle = 'rgba(120,60,30,0.65)'; c.lineWidth = 1.3;
+        c.beginPath(); c.arc(4, -73.5, 2.6, 0.15, Math.PI - 0.6); c.stroke();
+
+        // balaclava cobrindo nuca e orelha
+        c.fillStyle = '#1e293b';
+        c.beginPath(); c.ellipse(-5, -78, 6, 10.5, 0, 0, Math.PI * 2); c.fill();
+
+        /* ---------- CAPACETE ---------- */
+        // casco
+        const gc = c.createLinearGradient(-14, -96, 14, -84);
+        gc.addColorStop(0, '#ef4444');
+        gc.addColorStop(1, '#b91c1c');
+        c.fillStyle = gc;
+        c.beginPath();
+        c.ellipse(0, -87, 14.5, 12, 0, Math.PI, 0);
+        c.closePath(); c.fill();
+        // crista central
         c.fillStyle = '#dc2626';
-        c.beginPath(); c.arc(0, -73, 13, Math.PI, 0); c.fill();
-        c.fillRect(-15, -74, 30, 5);            // aba frontal
-        c.fillStyle = '#b91c1c';
-        c.fillRect(-17, -74, 6, 5);             // aba traseira alongada
-        c.fillStyle = '#fde68a';                 // brasão
-        c.beginPath(); c.moveTo(0, -84); c.lineTo(4, -77); c.lineTo(-4, -77); c.closePath(); c.fill();
+        this.arred(c, -1.6, -99, 3.2, 13, 1.5); c.fill();
 
-        // viseira
-        c.fillStyle = 'rgba(148, 163, 184, 0.6)';
-        c.fillRect(-11, -71, 22, 5);
+        // aba do capacete (longa atrás, curta na frente)
+        c.fillStyle = '#991b1b';
+        c.beginPath();
+        c.moveTo(-22, -84);
+        c.quadraticCurveTo(0, -79, 17, -85);
+        c.quadraticCurveTo(0, -75.5, -22, -80);
+        c.closePath(); c.fill();
+
+        // brasão frontal
+        c.fillStyle = '#fbbf24';
+        c.beginPath();
+        c.moveTo(9, -95); c.lineTo(14, -88); c.lineTo(9, -85.5); c.lineTo(4, -88);
+        c.closePath(); c.fill();
+
+        // faixa refletiva no capacete
+        c.fillStyle = 'rgba(255,255,255,0.5)';
+        c.fillRect(-13, -88.5, 9, 2.5);
+
+        /* ---------- MÁSCARA / VISEIRA ---------- */
+        c.fillStyle = 'rgba(186, 216, 240, 0.35)';
+        c.beginPath(); c.ellipse(2, -79, 11, 9.5, 0, 0, Math.PI * 2); c.fill();
+        c.strokeStyle = 'rgba(71,85,105,0.85)'; c.lineWidth = 1.6;
+        c.beginPath(); c.ellipse(2, -79, 11, 9.5, 0, 0, Math.PI * 2); c.stroke();
+        // reflexo
+        c.fillStyle = 'rgba(255,255,255,0.4)';
+        c.beginPath(); c.ellipse(6, -83, 3.4, 2.2, -0.5, 0, Math.PI * 2); c.fill();
+
+        /* ---------- BRAÇO DA FRENTE ---------- */
+        this.braco(c, 11, -62, passoA, CASACO, PELE, REFLET);
+
+        c.restore();
+        c.restore();
+    }
+
+    /* Perna com coxa, canela e bota, articulada pelo passo (-1..1) */
+    perna(c, x, quadril, passo, corCalca, corBota, refletivo) {
+        c.save();
+        c.translate(x, quadril);
+        c.rotate(passo * 0.5);
+
+        c.fillStyle = corCalca;
+        this.arred(c, -5.5, 0, 11, 18, 4); c.fill();      // coxa
+
+        c.translate(0, 17);
+        c.rotate(Math.max(0, -passo) * 0.75);              // joelho dobra ao recuar
+
+        c.fillStyle = corCalca;
+        this.arred(c, -5, 0, 10, 15, 3.5); c.fill();       // canela
+        c.fillStyle = refletivo;
+        c.fillRect(-5, 6, 10, 3);                          // faixa na canela
+
+        c.fillStyle = corBota;                             // bota
+        this.arred(c, -6.5, 13, 15, 7, 3); c.fill();
+
+        c.restore();
+    }
+
+    /* Braço com manga, faixa refletiva, luva e balanço */
+    braco(c, x, ombro, passo, corManga, corPele, refletivo) {
+        c.save();
+        c.translate(x, ombro);
+        c.rotate(-passo * 0.7);
+
+        c.fillStyle = corManga;
+        this.arred(c, -4.5, 0, 9, 17, 4); c.fill();        // braço
+        c.fillStyle = refletivo;
+        c.fillRect(-4.5, 11, 9, 3);
+
+        c.translate(0, 16);
+        c.rotate(Math.abs(passo) * 0.5);
+
+        c.fillStyle = corManga;
+        this.arred(c, -4, 0, 8, 13, 3.5); c.fill();        // antebraço
+
+        c.fillStyle = '#1f2937';                           // luva
+        c.beginPath(); c.arc(0, 14, 4.6, 0, Math.PI * 2); c.fill();
 
         c.restore();
     }
