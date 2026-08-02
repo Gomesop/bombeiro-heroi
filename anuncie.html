@@ -55,6 +55,11 @@
             background: rgba(0,0,0,0.28); border-radius: 12px; padding: 0.8rem 1rem; margin-bottom: 1.2rem;
         }
         .voltar { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; }
+        .aviso-aba {
+            margin-top: 0.9rem; margin-bottom: 0; font-size: 0.82rem; color: #ecfdf5;
+            background: rgba(34,197,94,0.22); border: 1px solid rgba(134,239,172,0.55);
+        }
+        .aviso-aba[hidden] { display: none; }
     </style>
 </head>
 <body>
@@ -131,6 +136,12 @@
                 </p>
 
                 <a href="index.html" id="btn-voltar" class="btn btn-primary btn-lg btn-block voltar">🎮 Voltar ao jogo</a>
+
+                <p class="anuncie-nota aviso-aba" id="aviso-aba" hidden>
+                    ✅ <strong>Sua partida continua aberta na aba anterior</strong>, exatamente onde você parou.
+                    O navegador não permite que esta página feche a si mesma — basta fechar esta aba
+                    (Ctrl+W, ou ⌘W no Mac) ou clicar na aba do jogo.
+                </p>
             </div>
         </div>
     </main>
@@ -140,26 +151,41 @@
         // partida ainda rodando na aba original. Voltar significa FECHAR esta aba
         // — abrir index.html aqui recomeçaria o jogo do cadastro.
         (function () {
-            const veioDoJogo = !!window.opener || window.history.length > 1;
+            // Veio do anúncio (nova aba, partida rodando atrás) ou é acesso direto?
+            const veioDoJogo = !!window.opener;
+
+            const aviso = document.getElementById('aviso-aba');
+
             const voltar = (e) => {
-                if (!veioDoJogo) return;              // acesso direto: segue o link normal
+                if (!veioDoJogo) return;   // acesso direto: o link para index.html serve
                 e.preventDefault();
-                window.close();
-                // se o navegador bloquear o fechamento, volta no histórico
+
+                // window.close() só é permitido em aba aberta por window.open().
+                // Se falhar, NUNCA navegue para index.html: isso recomeçaria a
+                // partida do cadastro, que é justamente o que se quer evitar.
+                try { window.close(); } catch (err) {}
+
                 setTimeout(() => {
-                    if (!window.closed) {
-                        if (window.history.length > 1) window.history.back();
-                        else window.location.href = 'index.html';
+                    if (window.closed) return;
+                    if (aviso) {
+                        aviso.hidden = false;
+                        aviso.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
-                }, 150);
+                    // devolve o foco para a aba do jogo, se ainda existir
+                    try { if (window.opener && !window.opener.closed) window.opener.focus(); } catch (err) {}
+                }, 180);
             };
+
             ['btn-voltar', 'btn-voltar-topo'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.addEventListener('click', voltar);
             });
+
             if (veioDoJogo) {
                 const b = document.getElementById('btn-voltar');
                 if (b) b.textContent = '🎮 Fechar e voltar ao jogo';
+                const t = document.getElementById('btn-voltar-topo');
+                if (t) t.textContent = '← Fechar e voltar ao jogo';
             }
         })();
     </script>
