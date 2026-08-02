@@ -68,7 +68,7 @@
                     <span class="brand-tagline">Espaço publicitário nos jogos</span>
                 </span>
             </a>
-            <a href="index.html" class="site-link-btn">← Voltar ao jogo</a>
+            <a href="index.html" id="btn-voltar-topo" class="site-link-btn">← Voltar ao jogo</a>
         </div>
     </header>
 
@@ -130,10 +130,38 @@
                     apenas para demonstrar como o anúncio aparece. Nenhuma empresa real está associada a ela.
                 </p>
 
-                <a href="index.html" class="btn btn-primary btn-lg btn-block voltar">🎮 Voltar ao jogo</a>
+                <a href="index.html" id="btn-voltar" class="btn btn-primary btn-lg btn-block voltar">🎮 Voltar ao jogo</a>
             </div>
         </div>
     </main>
 
+    <script>
+        // Esta página costuma ser aberta em nova aba a partir do anúncio, com a
+        // partida ainda rodando na aba original. Voltar significa FECHAR esta aba
+        // — abrir index.html aqui recomeçaria o jogo do cadastro.
+        (function () {
+            const veioDoJogo = !!window.opener || window.history.length > 1;
+            const voltar = (e) => {
+                if (!veioDoJogo) return;              // acesso direto: segue o link normal
+                e.preventDefault();
+                window.close();
+                // se o navegador bloquear o fechamento, volta no histórico
+                setTimeout(() => {
+                    if (!window.closed) {
+                        if (window.history.length > 1) window.history.back();
+                        else window.location.href = 'index.html';
+                    }
+                }, 150);
+            };
+            ['btn-voltar', 'btn-voltar-topo'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('click', voltar);
+            });
+            if (veioDoJogo) {
+                const b = document.getElementById('btn-voltar');
+                if (b) b.textContent = '🎮 Fechar e voltar ao jogo';
+            }
+        })();
+    </script>
 </body>
 </html>

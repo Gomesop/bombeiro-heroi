@@ -564,7 +564,9 @@ class BombeiroEngine {
         this.perna(c, -4, -32, passoB, CALCA_S, '#0b1220', REFLET);
 
         /* ---------- BRAÇO DE TRÁS ---------- */
-        this.braco(c, -12, -62, -passoB, CASACO_S, PELE, REFLET);
+        // Cada braço acompanha a perna OPOSTA (braco() já inverte o sentido
+        // internamente): braço de trás usa o passo da perna de trás.
+        this.braco(c, -11, -62, passoB, CASACO_S, PELE, REFLET);
 
         /* ---------- CILINDRO DE AR (costas) ---------- */
         c.fillStyle = '#64748b';
@@ -679,7 +681,12 @@ class BombeiroEngine {
         this.arred(c, -3, -95, 13, 6, 3); c.stroke();
 
         /* ---------- BRAÇO DA FRENTE ---------- */
-        this.braco(c, 12, -63, passoA, BRACO_F, PELE, REFLET);
+        // ombreira: conecta o braço ao tronco
+        c.fillStyle = BRACO_F;
+        c.strokeStyle = 'rgba(8,14,26,0.5)'; c.lineWidth = 1.3;
+        c.beginPath(); c.arc(10, -63, 6.5, 0, Math.PI * 2); c.fill(); c.stroke();
+
+        this.braco(c, 10, -62, passoA, BRACO_F, PELE, REFLET);
 
         c.restore();
         c.restore();

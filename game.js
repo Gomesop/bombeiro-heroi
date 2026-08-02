@@ -282,24 +282,18 @@ class BombeiroApp {
         document.getElementById('ad-chips').innerHTML =
             a.beneficios.map(b => `<span class="ad-chip">${b}</span>`).join('');
 
-        // CTA vai para o site do anunciante. Link interno (demonstração) abre na
-        // mesma aba; site externo abre em nova aba.
+        // O CTA SEMPRE abre em nova aba: se navegasse na mesma, o jogador
+        // perderia a partida em andamento e voltaria para o cadastro.
         const cta = document.getElementById('ad-cta');
         cta.textContent = a.cta;
         cta.href = a.url;
-        const externo = /^https?:\/\//i.test(a.url);
-        if (externo && a.novaAba !== false) {
-            cta.target = '_blank';
-            cta.rel = 'noopener noreferrer';
-        } else {
-            cta.removeAttribute('target');
-            cta.removeAttribute('rel');
-        }
+        cta.target = '_blank';
+        cta.rel = 'noopener noreferrer';
 
         const nota = document.getElementById('ad-demo-note');
         if (a.demonstracao) {
             nota.innerHTML = 'Marca fictícia, usada só para demonstrar este espaço. ' +
-                             '<a href="anuncie.html">Quer anunciar aqui?</a>';
+                '<a href="anuncie.html" target="_blank" rel="noopener noreferrer">Quer anunciar aqui?</a>';
             nota.classList.remove('hidden');
         } else {
             nota.classList.add('hidden');
