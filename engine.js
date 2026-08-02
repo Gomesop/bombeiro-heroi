@@ -778,22 +778,31 @@ class BombeiroEngine {
         c.restore();
     }
 
-    /* Braço com manga, faixa refletiva, luva e balanço */
+    /* Braço com manga, faixa refletiva, luva e balanço.
+       O personagem corre para a DIREITA (+x = frente).
+       Um segmento apontado para baixo (0,1) girado por θ vai para x' = -sen(θ):
+         θ < 0  → segmento vai para a FRENTE
+         θ > 0  → segmento vai para TRÁS
+       Por isso o cotovelo precisa de ângulo NEGATIVO: o antebraço só dobra
+       para a frente, em direção ao peito — nunca para trás. */
     braco(c, x, ombro, passo, corManga, corPele, refletivo) {
         c.save();
         c.translate(x, ombro);
-        c.rotate(-passo * 0.75);
+        c.rotate(-passo * 0.7);                    // ombro: passo>0 leva o braço à frente
 
         c.strokeStyle = 'rgba(8,14,26,0.6)';
         c.lineWidth = 1.5;
 
         c.fillStyle = corManga;
-        this.arred(c, -4.8, 0, 9.6, 18, 4.2); c.fill(); c.stroke();  // braço
+        this.arred(c, -4.8, 0, 9.6, 17, 4.2); c.fill(); c.stroke();  // braço (ombro→cotovelo)
         c.fillStyle = refletivo;
-        c.fillRect(-4.8, 11.5, 9.6, 3);
+        c.fillRect(-4.8, 11, 9.6, 3);
 
-        c.translate(0, 17);
-        c.rotate(Math.abs(passo) * 0.55);
+        // cotovelo: dobra sempre à frente (nunca inverte); em corrida fica
+        // permanentemente fechado, apertando mais quando o braço avança
+        c.translate(0, 16);
+        const dobra = 0.95 + passo * 0.4;        // ~0.55 a ~1.35 rad
+        c.rotate(-dobra);
 
         c.fillStyle = corManga;
         this.arred(c, -4.3, 0, 8.6, 14, 3.6); c.fill(); c.stroke();  // antebraço
