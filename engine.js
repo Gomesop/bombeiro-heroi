@@ -483,7 +483,7 @@ class BombeiroEngine {
             // ícone grande e nítido
             // grande de propósito: no celular o palco inteiro é reduzido para
             // caber na largura da tela, e um ícone pequeno some
-            c.font = '56px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",serif';
+            c.font = '64px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",serif';
             c.shadowColor = 'rgba(0,0,0,0.85)';
             c.shadowBlur = 7;
             c.shadowOffsetY = 2;
@@ -495,7 +495,7 @@ class BombeiroEngine {
             this.fiacao(c, o);
 
         } else {
-            const tam = Math.max(o.alt, 46) * 1.5;
+            const tam = Math.max(o.alt, 46) * 1.7;
 
             if (o.dados.id === 'fogo') {
                 const f = Math.sin(o.fase * 12) * 3;
@@ -519,10 +519,12 @@ class BombeiroEngine {
             c.shadowBlur = 0; c.shadowOffsetY = 0;
 
             if (o.dados.alto) {   // sinaliza que precisa agachar
-                c.font = 'bold 26px sans-serif';
+                // bem grande: reduzido para a largura de um celular, um ▼ de
+                // 26px virava 10px na tela e ninguém enxergava o aviso
+                c.font = 'bold 46px sans-serif';
                 c.fillStyle = '#fde047';
-                c.shadowColor = 'rgba(0,0,0,0.9)'; c.shadowBlur = 6;
-                c.fillText('▼', 0, o.alt / 2 + 26);
+                c.shadowColor = 'rgba(0,0,0,0.95)'; c.shadowBlur = 8;
+                c.fillText('▼', 0, o.alt / 2 + 40);
                 c.shadowBlur = 0;
             }
         }
@@ -746,11 +748,11 @@ class BombeiroEngine {
         c.shadowBlur = 0;
 
         // aviso de agachar
-        c.font = 'bold 26px sans-serif';
+        c.font = 'bold 46px sans-serif';
         c.fillStyle = '#fde047';
         c.textAlign = 'center'; c.textBaseline = 'middle';
-        c.shadowColor = 'rgba(0,0,0,0.9)'; c.shadowBlur = 6;
-        c.fillText('▼', 0, A / 2 + 26);
+        c.shadowColor = 'rgba(0,0,0,0.95)'; c.shadowBlur = 8;
+        c.fillText('▼', 0, A / 2 + 40);
         c.shadowBlur = 0;
     }
 
