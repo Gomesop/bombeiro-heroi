@@ -21,7 +21,7 @@ const ITENS = [
     { id: 'hidrante',  nome: 'Hidrante',            icone: '🚰', pontos: 25, dica: 'Fonte de água pressurizada para o combate prolongado.' },
     { id: 'mangueira', nome: 'Mangueira',           icone: '🧵', pontos: 20, dica: 'Conduz a água do hidrante até o foco do incêndio.' },
     { id: 'capacete',  nome: 'Capacete',            icone: '⛑️', pontos: 15, dica: 'EPI obrigatório: protege contra impacto e calor radiante.' },
-    { id: 'mascara',   nome: 'Máscara autônoma',    icone: '😷', pontos: 25, dica: 'Protege as vias respiratórias da fumaça e de gases tóxicos.' },
+    { id: 'mascara',   nome: 'Proteção respiratória', icone: '😷', pontos: 25, dica: 'Protege as vias respiratórias da fumaça e de gases tóxicos.' },
     { id: 'radio',     nome: 'Rádio comunicador',   icone: '📻', pontos: 15, dica: 'Comunicação com a equipe é vital durante a operação.' },
     { id: 'lanterna',  nome: 'Lanterna',            icone: '🔦', pontos: 15, dica: 'Ambientes com fumaça densa têm visibilidade quase nula.' }
 ];

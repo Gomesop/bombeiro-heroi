@@ -548,30 +548,32 @@ class BombeiroEngine {
         const passoB = noAr ? -0.35 : Math.sin(t + Math.PI);
         const balanco = noAr ? 0 : Math.abs(Math.sin(t)) * 2;   // sobe e desce do tronco
 
-        const CASACO   = '#b45309';   // bege-caramelo da farda de aproximação
-        const CASACO_S = '#8a3f07';
+        const CASACO   = '#b45309';   // farda de aproximação
+        const CASACO_S = '#7c3806';   // membros ao fundo, mais escuros
+        const BRACO_F  = '#d97706';   // braço da frente, mais claro que o tronco
         const REFLET   = '#fde047';   // faixa refletiva amarelo-limão
         const PRATA    = '#e2e8f0';
-        const CALCA    = '#334155';
-        const CALCA_S  = '#1e293b';
+        const CALCA    = '#3d4d66';   // perna da frente
+        const CALCA_S  = '#22304a';   // perna de trás
         const PELE     = '#f0c49b';
 
         c.save();
         c.translate(0, -balanco);
 
         /* ---------- PERNA DE TRÁS ---------- */
-        this.perna(c, -4, -30, passoB, CALCA_S, '#0f172a', REFLET);
+        this.perna(c, -4, -32, passoB, CALCA_S, '#0b1220', REFLET);
 
         /* ---------- BRAÇO DE TRÁS ---------- */
         this.braco(c, -12, -62, -passoB, CASACO_S, PELE, REFLET);
 
         /* ---------- CILINDRO DE AR (costas) ---------- */
         c.fillStyle = '#64748b';
-        this.arred(c, -25, -64, 11, 30, 5); c.fill();
+        c.strokeStyle = 'rgba(8,14,26,0.55)'; c.lineWidth = 1.3;
+        this.arred(c, -25, -66, 11, 30, 5); c.fill(); c.stroke();
         c.fillStyle = '#94a3b8';
-        this.arred(c, -23, -62, 4, 26, 2); c.fill();
+        this.arred(c, -23, -64, 4, 26, 2); c.fill();
         c.fillStyle = '#475569';
-        c.fillRect(-25, -66, 11, 4);
+        c.fillRect(-25, -68, 11, 4);
         // mangueira do cilindro subindo pelo ombro
         c.strokeStyle = '#1e293b'; c.lineWidth = 2.6; c.lineCap = 'round';
         c.beginPath();
@@ -580,29 +582,30 @@ class BombeiroEngine {
         c.stroke();
 
         /* ---------- PERNA DA FRENTE ---------- */
-        this.perna(c, 4, -30, passoA, CALCA, '#111827', REFLET);
+        this.perna(c, 4, -32, passoA, CALCA, '#111827', REFLET);
 
         /* ---------- TRONCO / CASACO ---------- */
         c.fillStyle = CASACO;
-        this.arred(c, -16, -66, 32, 38, 9); c.fill();
+        c.strokeStyle = 'rgba(8,14,26,0.5)'; c.lineWidth = 1.4;
+        this.arred(c, -16, -68, 32, 38, 9); c.fill(); c.stroke();
         // sombreado lateral
         c.fillStyle = 'rgba(0,0,0,0.16)';
-        this.arred(c, -16, -66, 9, 38, 9); c.fill();
+        this.arred(c, -16, -68, 9, 38, 9); c.fill();
 
         // faixas refletivas (prata entre duas amarelas — padrão real)
-        c.fillStyle = REFLET; c.fillRect(-16, -50, 32, 3.5);
-        c.fillStyle = PRATA;  c.fillRect(-16, -46.5, 32, 4);
-        c.fillStyle = REFLET; c.fillRect(-16, -42.5, 32, 3.5);
+        c.fillStyle = REFLET; c.fillRect(-16, -52, 32, 3.5);
+        c.fillStyle = PRATA;  c.fillRect(-16, -48.5, 32, 4);
+        c.fillStyle = REFLET; c.fillRect(-16, -44.5, 32, 3.5);
         // faixa vertical no peito
-        c.fillStyle = PRATA; c.fillRect(3, -66, 4.5, 16);
+        c.fillStyle = PRATA; c.fillRect(3, -68, 4.5, 16);
 
         // gola alta
         c.fillStyle = CASACO_S;
-        this.arred(c, -16, -68, 32, 8, 4); c.fill();
+        this.arred(c, -16, -70, 32, 8, 4); c.fill();
 
         // cinto com fivela
-        c.fillStyle = '#1f2937'; c.fillRect(-16, -32, 32, 5);
-        c.fillStyle = '#facc15'; c.fillRect(-3, -32.5, 7, 6);
+        c.fillStyle = '#1f2937'; c.fillRect(-16, -34, 32, 5);
+        c.fillStyle = '#facc15'; c.fillRect(-3, -34.5, 7, 6);
 
         /* ---------- CABEÇA ---------- */
         // pescoço
@@ -676,7 +679,7 @@ class BombeiroEngine {
         this.arred(c, -3, -95, 13, 6, 3); c.stroke();
 
         /* ---------- BRAÇO DA FRENTE ---------- */
-        this.braco(c, 11, -62, passoA, CASACO, PELE, REFLET);
+        this.braco(c, 12, -63, passoA, BRACO_F, PELE, REFLET);
 
         c.restore();
         c.restore();
@@ -748,19 +751,22 @@ class BombeiroEngine {
         c.translate(x, quadril);
         c.rotate(passo * 0.5);
 
-        c.fillStyle = corCalca;
-        this.arred(c, -5.5, 0, 11, 18, 4); c.fill();      // coxa
-
-        c.translate(0, 17);
-        c.rotate(Math.max(0, -passo) * 0.75);              // joelho dobra ao recuar
+        c.strokeStyle = 'rgba(8,14,26,0.55)';
+        c.lineWidth = 1.4;
 
         c.fillStyle = corCalca;
-        this.arred(c, -5, 0, 10, 15, 3.5); c.fill();       // canela
+        this.arred(c, -5.5, 0, 11, 20, 4); c.fill(); c.stroke();   // coxa
+
+        c.translate(0, 19);
+        c.rotate(Math.max(0, -passo) * 0.75);                       // joelho dobra ao recuar
+
+        c.fillStyle = corCalca;
+        this.arred(c, -5, 0, 10, 17, 3.5); c.fill(); c.stroke();    // canela
         c.fillStyle = refletivo;
-        c.fillRect(-5, 6, 10, 3);                          // faixa na canela
+        c.fillRect(-5, 7, 10, 3.2);                                 // faixa na canela
 
-        c.fillStyle = corBota;                             // bota
-        this.arred(c, -6.5, 13, 15, 7, 3); c.fill();
+        c.fillStyle = corBota;                                      // bota
+        this.arred(c, -6.5, 15, 15, 7, 3); c.fill(); c.stroke();
 
         c.restore();
     }
@@ -769,21 +775,24 @@ class BombeiroEngine {
     braco(c, x, ombro, passo, corManga, corPele, refletivo) {
         c.save();
         c.translate(x, ombro);
-        c.rotate(-passo * 0.7);
+        c.rotate(-passo * 0.75);
+
+        c.strokeStyle = 'rgba(8,14,26,0.6)';
+        c.lineWidth = 1.5;
 
         c.fillStyle = corManga;
-        this.arred(c, -4.5, 0, 9, 17, 4); c.fill();        // braço
+        this.arred(c, -4.8, 0, 9.6, 18, 4.2); c.fill(); c.stroke();  // braço
         c.fillStyle = refletivo;
-        c.fillRect(-4.5, 11, 9, 3);
+        c.fillRect(-4.8, 11.5, 9.6, 3);
 
-        c.translate(0, 16);
-        c.rotate(Math.abs(passo) * 0.5);
+        c.translate(0, 17);
+        c.rotate(Math.abs(passo) * 0.55);
 
         c.fillStyle = corManga;
-        this.arred(c, -4, 0, 8, 13, 3.5); c.fill();        // antebraço
+        this.arred(c, -4.3, 0, 8.6, 14, 3.6); c.fill(); c.stroke();  // antebraço
 
-        c.fillStyle = '#1f2937';                           // luva
-        c.beginPath(); c.arc(0, 14, 4.6, 0, Math.PI * 2); c.fill();
+        c.fillStyle = '#0f172a';                                     // luva
+        c.beginPath(); c.arc(0, 15, 4.8, 0, Math.PI * 2); c.fill(); c.stroke();
 
         c.restore();
     }
