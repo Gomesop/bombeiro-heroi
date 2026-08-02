@@ -235,7 +235,14 @@ class BombeiroEngine {
             this.objetos.push({
                 tipo: 'obstaculo', dados,
                 x: this.W + 60,
-                y: dados.alto ? this.chaoY - 116 : this.chaoY - dados.alt / 2,
+                /* Obstáculo alto: a altura tem que pegar o bombeiro EM PÉ e
+                   passar por cima dele AGACHADO. Em pé a caixa vai de
+                   chaoY-68 a chaoY; agachado, de chaoY-40 a chaoY. Com o
+                   centro em chaoY-72 a base do obstáculo cai por volta de
+                   chaoY-57: entra ~11px na cabeça de quem não abaixa e sobra
+                   ~17px para quem abaixa. Antes era chaoY-116, que passava
+                   31px acima da cabeça e nunca causava dano. */
+                y: dados.alto ? this.chaoY - 72 : this.chaoY - dados.alt / 2,
                 larg: dados.larg, alt: dados.alt, fase: 0
             });
         }
