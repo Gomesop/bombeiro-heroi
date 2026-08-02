@@ -478,10 +478,12 @@ class BombeiroEngine {
             g.addColorStop(0.55,'rgba(250, 204, 21, 0.22)');
             g.addColorStop(1,   'rgba(250, 204, 21, 0)');
             c.fillStyle = g;
-            c.beginPath(); c.arc(0, 0, 34, 0, Math.PI * 2); c.fill();
+            c.beginPath(); c.arc(0, 0, 40, 0, Math.PI * 2); c.fill();
 
             // ícone grande e nítido
-            c.font = '44px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",serif';
+            // grande de propósito: no celular o palco inteiro é reduzido para
+            // caber na largura da tela, e um ícone pequeno some
+            c.font = '56px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",serif';
             c.shadowColor = 'rgba(0,0,0,0.85)';
             c.shadowBlur = 7;
             c.shadowOffsetY = 2;
@@ -493,7 +495,7 @@ class BombeiroEngine {
             this.fiacao(c, o);
 
         } else {
-            const tam = Math.max(o.alt, 46) * 1.25;
+            const tam = Math.max(o.alt, 46) * 1.5;
 
             if (o.dados.id === 'fogo') {
                 const f = Math.sin(o.fase * 12) * 3;
@@ -517,10 +519,10 @@ class BombeiroEngine {
             c.shadowBlur = 0; c.shadowOffsetY = 0;
 
             if (o.dados.alto) {   // sinaliza que precisa agachar
-                c.font = 'bold 17px sans-serif';
+                c.font = 'bold 26px sans-serif';
                 c.fillStyle = '#fde047';
-                c.shadowColor = 'rgba(0,0,0,0.9)'; c.shadowBlur = 5;
-                c.fillText('▼', 0, o.alt / 2 + 20);
+                c.shadowColor = 'rgba(0,0,0,0.9)'; c.shadowBlur = 6;
+                c.fillText('▼', 0, o.alt / 2 + 26);
                 c.shadowBlur = 0;
             }
         }
@@ -744,11 +746,11 @@ class BombeiroEngine {
         c.shadowBlur = 0;
 
         // aviso de agachar
-        c.font = 'bold 17px sans-serif';
+        c.font = 'bold 26px sans-serif';
         c.fillStyle = '#fde047';
         c.textAlign = 'center'; c.textBaseline = 'middle';
-        c.shadowColor = 'rgba(0,0,0,0.9)'; c.shadowBlur = 5;
-        c.fillText('▼', 0, A / 2 + 20);
+        c.shadowColor = 'rgba(0,0,0,0.9)'; c.shadowBlur = 6;
+        c.fillText('▼', 0, A / 2 + 26);
         c.shadowBlur = 0;
     }
 

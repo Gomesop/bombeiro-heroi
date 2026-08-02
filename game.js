@@ -147,8 +147,14 @@ class BombeiroApp {
     ajustarCanvas() {
         if (!this.canvas) return;
         const wrap = this.canvas.parentElement;
-        const larg = Math.min(900, Math.max(320, wrap.clientWidth || 900));
-        const alt = Math.round(Math.min(420, Math.max(240, larg * 0.47)));
+        /* A resolução INTERNA é sempre 900x420 e o CSS encaixa isso na largura
+           disponível. Antes ela seguia o clientWidth: num celular de 340px os
+           ícones de 44px ocupavam 13% da cena (contra 5% no PC), estouravam os
+           obstáculos e se sobrepunham ao herói. Com o palco fixo, o celular
+           vira uma redução fiel do desktop — e a física fica idêntica em
+           qualquer tela, sem precisar rebalancear nada. */
+        const larg = 900, alt = 420;
+
         if (this.canvas.width !== larg || this.canvas.height !== alt) {
             this.canvas.width = larg;
             this.canvas.height = alt;

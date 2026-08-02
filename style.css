@@ -400,17 +400,24 @@ a { color: var(--steel); text-decoration: none; }
     100% { transform: scale(1); opacity: 1; }
 }
 
+/* Setas empilhadas: pular em cima, agachar embaixo — o polegar acerta
+   muito melhor do que com os dois botões lado a lado. */
 .touch-controls {
-    display: grid; grid-template-columns: 1fr 1fr;
+    display: grid; grid-template-columns: 1fr;
     gap: 0.5rem; margin-top: 0.6rem;
+    max-width: 340px; margin-left: auto; margin-right: auto;
 }
 .tbtn {
-    border-radius: 13px; border: 1.5px solid var(--line); border-bottom-width: 4px;
+    display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+    border-radius: 15px; border: 1.5px solid var(--line); border-bottom-width: 4px;
     background: rgba(255,255,255,0.06); color: var(--text);
-    font-family: var(--fh); font-weight: 900; font-size: 0.92rem;
-    padding: 0.9rem 0.4rem; cursor: pointer; user-select: none; touch-action: none;
+    font-family: var(--fh); font-weight: 900; font-size: 1rem;
+    padding: 0.85rem 0.6rem; cursor: pointer; user-select: none; touch-action: none;
     transition: transform 0.08s ease, background 0.12s ease;
+    min-height: 58px;
 }
+.tbtn-seta { font-size: 1.5rem; line-height: 1; }
+.tbtn-txt { letter-spacing: 0.06em; }
 .tbtn:active { transform: translateY(2px); border-bottom-width: 2px; }
 .tbtn-jump { border-color: rgba(34,197,94,0.5); color: #86efac; background: rgba(34,197,94,0.12); }
 .tbtn-duck { border-color: rgba(56,189,248,0.5); color: #7dd3fc; background: rgba(56,189,248,0.12); }
@@ -633,6 +640,17 @@ a { color: var(--steel); text-decoration: none; }
     .game-hud { gap: 0.4rem; padding: 0.45rem 0.6rem; }
     .hud-center { order: 3; flex-basis: 100%; }
     .hud-scene { max-width: 34vw; }
+
+    /* no celular o HUD encolhia junto com a tela e virava um amontoado:
+       aqui ele ganha corpo de volta */
+    .hud-lives { font-size: 1.05rem; letter-spacing: 0; }
+    .hud-score strong, .hud-time strong { font-size: 1.05rem; }
+    .hud-phase { font-size: 0.8rem; }
+    .hud-scene { font-size: 0.66rem; }
+
+    /* o palco ocupa a largura toda: cada pixel conta para a leitura dos ícones */
+    .stage-wrap { margin-left: -0.7rem; margin-right: -0.7rem; width: calc(100% + 1.4rem); }
+    #game-canvas { border-radius: 0; border-left: 0; border-right: 0; }
 
     .end-metrics { grid-template-columns: 1fr 1fr; }
     .end-cta { flex-direction: column; text-align: center; }
