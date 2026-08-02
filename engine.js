@@ -480,14 +480,11 @@ class BombeiroEngine {
             c.fillStyle = g;
             c.beginPath(); c.arc(0, 0, 40, 0, Math.PI * 2); c.fill();
 
-            // ícone grande e nítido
-            // grande de propósito: no celular o palco inteiro é reduzido para
-            // caber na largura da tela, e um ícone pequeno some
-            c.font = '64px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",serif';
-            c.shadowColor = 'rgba(0,0,0,0.85)';
-            c.shadowBlur = 7;
-            c.shadowOffsetY = 2;
-            c.fillText(o.dados.icone, 0, 1);
+            // desenhado em vetor: grande, colorido e igual em qualquer aparelho
+            c.shadowColor = 'rgba(0,0,0,0.5)';
+            c.shadowBlur = 6;
+            c.shadowOffsetY = 3;
+            this.iconeItem(c, o.dados.id, 46);
             c.shadowBlur = 0; c.shadowOffsetY = 0;
 
         } else if (o.dados.id === 'fiacao') {
@@ -495,27 +492,26 @@ class BombeiroEngine {
             this.fiacao(c, o);
 
         } else {
-            const tam = Math.max(o.alt, 46) * 1.7;
-
             if (o.dados.id === 'fogo') {
-                const f = Math.sin(o.fase * 12) * 3;
-                const g = c.createRadialGradient(0, 6, 3, 0, 6, o.larg * 0.9);
-                g.addColorStop(0, 'rgba(255, 170, 60, 0.5)');
+                const g = c.createRadialGradient(0, 6, 3, 0, 6, o.larg * 1.1);
+                g.addColorStop(0, 'rgba(255, 170, 60, 0.45)');
                 g.addColorStop(1, 'rgba(239, 68, 68, 0)');
                 c.fillStyle = g;
-                c.beginPath(); c.ellipse(0, 6, o.larg * 0.9, o.alt * 0.75, 0, 0, Math.PI * 2); c.fill();
-                c.font = `${tam + f}px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",serif`;
+                c.beginPath(); c.ellipse(0, 6, o.larg * 1.1, o.alt * 0.85, 0, 0, Math.PI * 2); c.fill();
             } else {
                 // sombra discreta no chão
                 c.fillStyle = 'rgba(0,0,0,0.22)';
                 c.beginPath(); c.ellipse(0, o.alt / 2 + 5, o.larg * 0.45, 6, 0, 0, Math.PI * 2); c.fill();
-                c.font = `${tam}px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",serif`;
             }
 
-            c.shadowColor = 'rgba(0,0,0,0.9)';
-            c.shadowBlur = 8;
-            c.shadowOffsetY = 2;
-            c.fillText(o.dados.icone, 0, 0);
+            c.shadowColor = 'rgba(0,0,0,0.45)';
+            c.shadowBlur = 6;
+            c.shadowOffsetY = 3;
+            // desenhado um pouco maior que a caixa de colisão: fica legível na
+            // tela do celular sem endurecer o jogo
+            c.save(); c.scale(1.22, 1.22);
+            this.iconeObstaculo(c, o);
+            c.restore();
             c.shadowBlur = 0; c.shadowOffsetY = 0;
 
             if (o.dados.alto) {   // sinaliza que precisa agachar
@@ -529,6 +525,227 @@ class BombeiroEngine {
             }
         }
         c.restore();
+    }
+
+    /* ============================================================
+       ÍCONES EM VETOR
+       Emoji no canvas sai como silhueta preta no Safari do iPhone quando há
+       sombra aplicada — e mesmo sem sombra a cor varia de sistema para
+       sistema. Desenhar à mão garante que cada item seja reconhecível e
+       tenha cor própria em qualquer aparelho.
+       ============================================================ */
+
+    iconeItem(c, id, s) {
+        c.save();
+        c.lineJoin = 'round';
+        c.lineCap = 'round';
+        const traco = (cor, larg) => { c.strokeStyle = cor; c.lineWidth = larg; };
+
+        if (id === 'extintor') {
+            c.fillStyle = '#dc2626';
+            this.roundRect(c, -s * 0.28, -s * 0.42, s * 0.56, s * 0.9, s * 0.16); c.fill();
+            traco('#7f1d1d', s * 0.07); c.stroke();
+            c.fillStyle = '#e5e7eb';
+            this.roundRect(c, -s * 0.16, -s * 0.62, s * 0.32, s * 0.22, s * 0.06); c.fill();
+            traco('#111827', s * 0.09);
+            c.beginPath(); c.moveTo(s * 0.14, -s * 0.55); c.quadraticCurveTo(s * 0.6, -s * 0.4, s * 0.5, s * 0.05); c.stroke();
+            c.fillStyle = '#fef3c7';
+            this.roundRect(c, -s * 0.18, -s * 0.14, s * 0.36, s * 0.3, s * 0.05); c.fill();
+
+        } else if (id === 'machado') {
+            traco('#92400e', s * 0.16);
+            c.beginPath(); c.moveTo(-s * 0.34, s * 0.6); c.lineTo(s * 0.26, -s * 0.42); c.stroke();
+            c.fillStyle = '#cbd5e1';
+            c.beginPath();
+            c.moveTo(s * 0.16, -s * 0.58); c.quadraticCurveTo(s * 0.72, -s * 0.5, s * 0.6, s * 0.02);
+            c.quadraticCurveTo(s * 0.3, -s * 0.1, s * 0.06, -s * 0.3); c.closePath(); c.fill();
+            traco('#475569', s * 0.06); c.stroke();
+
+        } else if (id === 'hidrante') {
+            c.fillStyle = '#ef4444';
+            this.roundRect(c, -s * 0.3, -s * 0.34, s * 0.6, s * 0.82, s * 0.14); c.fill();
+            traco('#7f1d1d', s * 0.06); c.stroke();
+            c.beginPath(); c.arc(0, -s * 0.4, s * 0.26, Math.PI, 0); c.fill(); c.stroke();
+            c.fillStyle = '#fbbf24';
+            [-1, 1].forEach(k => { c.beginPath(); c.arc(k * s * 0.34, -s * 0.02, s * 0.13, 0, Math.PI * 2); c.fill(); });
+            c.fillStyle = '#7f1d1d';
+            c.fillRect(-s * 0.36, s * 0.46, s * 0.72, s * 0.12);
+
+        } else if (id === 'mangueira') {
+            traco('#facc15', s * 0.19);
+            c.beginPath(); c.arc(0, 0, s * 0.42, 0, Math.PI * 2); c.stroke();
+            traco('#ca8a04', s * 0.06);
+            c.beginPath(); c.arc(0, 0, s * 0.42, 0, Math.PI * 2); c.stroke();
+            traco('#facc15', s * 0.19);
+            c.beginPath(); c.moveTo(s * 0.36, s * 0.22); c.quadraticCurveTo(s * 0.7, s * 0.5, s * 0.34, s * 0.62); c.stroke();
+            c.fillStyle = '#94a3b8';
+            this.roundRect(c, s * 0.18, s * 0.5, s * 0.28, s * 0.2, s * 0.05); c.fill();
+
+        } else if (id === 'capacete') {
+            c.fillStyle = '#f97316';
+            c.beginPath(); c.arc(0, s * 0.02, s * 0.46, Math.PI, 0); c.fill();
+            traco('#9a3412', s * 0.06); c.stroke();
+            c.fillStyle = '#ea580c';
+            c.beginPath(); c.ellipse(0, s * 0.06, s * 0.66, s * 0.16, 0, 0, Math.PI * 2); c.fill();
+            traco('#9a3412', s * 0.05); c.stroke();
+            c.fillStyle = '#fff7ed';
+            c.beginPath();
+            c.moveTo(0, -s * 0.34); c.lineTo(s * 0.16, -s * 0.22); c.lineTo(0, -s * 0.02); c.lineTo(-s * 0.16, -s * 0.22);
+            c.closePath(); c.fill();
+
+        } else if (id === 'mascara') {
+            c.fillStyle = '#e2e8f0';
+            c.beginPath(); c.ellipse(0, 0, s * 0.42, s * 0.44, 0, 0, Math.PI * 2); c.fill();
+            traco('#64748b', s * 0.07); c.stroke();
+            c.fillStyle = '#38bdf8';
+            c.beginPath(); c.ellipse(0, -s * 0.1, s * 0.26, s * 0.18, 0, 0, Math.PI * 2); c.fill();
+            c.fillStyle = '#475569';
+            c.beginPath(); c.arc(0, s * 0.26, s * 0.16, 0, Math.PI * 2); c.fill();
+            traco('#334155', s * 0.08);
+            c.beginPath(); c.moveTo(-s * 0.4, -s * 0.18); c.lineTo(-s * 0.62, -s * 0.3);
+            c.moveTo(s * 0.4, -s * 0.18); c.lineTo(s * 0.62, -s * 0.3); c.stroke();
+
+        } else if (id === 'radio') {
+            c.fillStyle = '#1f2937';
+            this.roundRect(c, -s * 0.28, -s * 0.34, s * 0.56, s * 0.86, s * 0.1); c.fill();
+            traco('#0f172a', s * 0.06); c.stroke();
+            c.fillStyle = '#4ade80';
+            this.roundRect(c, -s * 0.17, -s * 0.24, s * 0.34, s * 0.22, s * 0.04); c.fill();
+            c.fillStyle = '#94a3b8';
+            for (let i = 0; i < 3; i++) c.fillRect(-s * 0.16, s * 0.06 + i * s * 0.13, s * 0.32, s * 0.06);
+            traco('#111827', s * 0.09);
+            c.beginPath(); c.moveTo(s * 0.16, -s * 0.34); c.lineTo(s * 0.3, -s * 0.72); c.stroke();
+
+        } else if (id === 'lanterna') {
+            c.fillStyle = '#334155';
+            this.roundRect(c, -s * 0.5, -s * 0.16, s * 0.62, s * 0.32, s * 0.08); c.fill();
+            c.fillStyle = '#facc15';
+            c.beginPath();
+            c.moveTo(s * 0.1, -s * 0.26); c.lineTo(s * 0.28, -s * 0.26);
+            c.lineTo(s * 0.28, s * 0.26); c.lineTo(s * 0.1, s * 0.26); c.closePath(); c.fill();
+            const g = c.createLinearGradient(s * 0.28, 0, s * 0.85, 0);
+            g.addColorStop(0, 'rgba(253,224,71,0.85)');
+            g.addColorStop(1, 'rgba(253,224,71,0)');
+            c.fillStyle = g;
+            c.beginPath(); c.moveTo(s * 0.28, -s * 0.24); c.lineTo(s * 0.85, -s * 0.5);
+            c.lineTo(s * 0.85, s * 0.5); c.lineTo(s * 0.28, s * 0.24); c.closePath(); c.fill();
+        }
+        c.restore();
+    }
+
+    iconeObstaculo(c, o) {
+        const id = o.dados.id, L = o.larg, A = o.alt;
+        c.save();
+        c.lineJoin = 'round'; c.lineCap = 'round';
+        const traco = (cor, larg) => { c.strokeStyle = cor; c.lineWidth = larg; };
+
+        if (id === 'fogo') {
+            const osc = Math.sin(o.fase * 11) * (A * 0.06);
+            const chama = (esc, cor) => {
+                const h = A * esc;
+                c.fillStyle = cor;
+                c.beginPath();
+                c.moveTo(0, A * 0.5);
+                c.bezierCurveTo(-L * 0.5 * esc, A * 0.16, -L * 0.26 * esc, -h * 0.36 + osc, 0, -h * 0.62 + osc);
+                c.bezierCurveTo(L * 0.26 * esc, -h * 0.36 + osc, L * 0.5 * esc, A * 0.16, 0, A * 0.5);
+                c.closePath(); c.fill();
+            };
+            chama(1.0, '#dc2626');
+            chama(0.72, '#f97316');
+            chama(0.42, '#fde047');
+
+        } else if (id === 'entulho') {
+            const tijolo = (x, y, w, h) => {
+                c.fillStyle = '#b45309';
+                this.roundRect(c, x, y, w, h, 2); c.fill();
+                traco('#78350f', 2); c.stroke();
+            };
+            tijolo(-L * 0.48, A * 0.06, L * 0.44, A * 0.36);
+            tijolo(0, A * 0.06, L * 0.46, A * 0.36);
+            tijolo(-L * 0.28, -A * 0.36, L * 0.46, A * 0.36);
+            tijolo(L * 0.2, -A * 0.32, L * 0.3, A * 0.32);
+
+        } else if (id === 'escombro') {
+            const pedra = (x, y, r, cor) => {
+                c.fillStyle = cor;
+                c.beginPath();
+                c.moveTo(x - r, y + r * 0.5); c.lineTo(x - r * 0.5, y - r * 0.7);
+                c.lineTo(x + r * 0.6, y - r * 0.5); c.lineTo(x + r, y + r * 0.5);
+                c.closePath(); c.fill();
+                traco('#334155', 2); c.stroke();
+            };
+            pedra(-L * 0.24, A * 0.14, L * 0.26, '#94a3b8');
+            pedra(L * 0.22, A * 0.18, L * 0.24, '#64748b');
+            pedra(-L * 0.02, -A * 0.2, L * 0.24, '#cbd5e1');
+
+        } else if (id === 'carro') {
+            c.fillStyle = '#2563eb';
+            this.roundRect(c, -L * 0.5, -A * 0.1, L, A * 0.5, A * 0.14); c.fill();
+            traco('#1e3a8a', 2.5); c.stroke();
+            c.fillStyle = '#3b82f6';
+            c.beginPath();
+            c.moveTo(-L * 0.28, -A * 0.1); c.lineTo(-L * 0.16, -A * 0.46);
+            c.lineTo(L * 0.2, -A * 0.46); c.lineTo(L * 0.3, -A * 0.1);
+            c.closePath(); c.fill(); c.stroke();
+            c.fillStyle = '#bae6fd';
+            c.beginPath();
+            c.moveTo(-L * 0.2, -A * 0.14); c.lineTo(-L * 0.12, -A * 0.4);
+            c.lineTo(L * 0.14, -A * 0.4); c.lineTo(L * 0.2, -A * 0.14);
+            c.closePath(); c.fill();
+            c.fillStyle = '#0f172a';
+            [-L * 0.28, L * 0.28].forEach(x => { c.beginPath(); c.arc(x, A * 0.42, A * 0.16, 0, Math.PI * 2); c.fill(); });
+            c.fillStyle = '#fde047';
+            c.beginPath(); c.arc(L * 0.46, A * 0.1, A * 0.09, 0, Math.PI * 2); c.fill();
+
+        } else if (id === 'barril') {
+            c.fillStyle = '#ea580c';
+            this.roundRect(c, -L * 0.42, -A * 0.46, L * 0.84, A * 0.92, L * 0.16); c.fill();
+            traco('#7c2d12', 2.5); c.stroke();
+            c.fillStyle = '#9a3412';
+            c.fillRect(-L * 0.42, -A * 0.22, L * 0.84, A * 0.09);
+            c.fillRect(-L * 0.42, A * 0.14, L * 0.84, A * 0.09);
+            c.fillStyle = '#fef08a';
+            c.beginPath();
+            c.moveTo(0, -A * 0.12); c.lineTo(L * 0.16, A * 0.06);
+            c.lineTo(0, A * 0.02); c.lineTo(-L * 0.1, A * 0.2);
+            c.lineTo(-L * 0.02, 0); c.lineTo(-L * 0.14, -A * 0.02);
+            c.closePath(); c.fill();
+
+        } else if (id === 'fumaca') {
+            const puff = (x, y, r, alpha) => {
+                c.fillStyle = `rgba(148,163,184,${alpha})`;
+                c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fill();
+            };
+            const w = Math.sin(o.fase * 3) * (L * 0.03);
+            puff(-L * 0.3 + w, A * 0.04, A * 0.42, 0.92);
+            puff(-L * 0.02, -A * 0.12 + w, A * 0.5, 0.95);
+            puff(L * 0.28 - w, A * 0.02, A * 0.44, 0.9);
+            puff(L * 0.06, A * 0.2, A * 0.34, 0.85);
+            c.fillStyle = 'rgba(226,232,240,0.85)';
+            c.beginPath(); c.arc(-L * 0.08, -A * 0.2, A * 0.2, 0, Math.PI * 2); c.fill();
+
+        } else if (id === 'viga') {
+            c.fillStyle = '#78350f';
+            this.roundRect(c, -L * 0.5, -A * 0.3, L, A * 0.6, 4); c.fill();
+            traco('#451a03', 2.5); c.stroke();
+            c.fillStyle = '#92400e';
+            c.fillRect(-L * 0.5, -A * 0.3, L, A * 0.14);
+            traco('#451a03', 2);
+            for (let i = -2; i <= 2; i++) {
+                c.beginPath(); c.moveTo(i * L * 0.18, -A * 0.16); c.lineTo(i * L * 0.18 + L * 0.05, A * 0.24); c.stroke();
+            }
+        }
+        c.restore();
+    }
+
+    roundRect(c, x, y, w, h, r) {
+        c.beginPath();
+        c.moveTo(x + r, y);
+        c.arcTo(x + w, y, x + w, y + h, r);
+        c.arcTo(x + w, y + h, x, y + h, r);
+        c.arcTo(x, y + h, x, y, r);
+        c.arcTo(x, y, x + w, y, r);
+        c.closePath();
     }
 
     /* --- o bombeiro --- */

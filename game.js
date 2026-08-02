@@ -153,7 +153,7 @@ class BombeiroApp {
            obstáculos e se sobrepunham ao herói. Com o palco fixo, o celular
            vira uma redução fiel do desktop — e a física fica idêntica em
            qualquer tela, sem precisar rebalancear nada. */
-        const larg = 900, alt = 420;
+        const larg = 900, alt = 540;   // palco alto: no celular a cena fica bem maior
 
         if (this.canvas.width !== larg || this.canvas.height !== alt) {
             this.canvas.width = larg;
