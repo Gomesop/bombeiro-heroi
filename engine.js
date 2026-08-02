@@ -488,6 +488,10 @@ class BombeiroEngine {
             c.fillText(o.dados.icone, 0, 1);
             c.shadowBlur = 0; c.shadowOffsetY = 0;
 
+        } else if (o.dados.id === 'fiacao') {
+            // desenhada à mão: o emoji ⚡ sai sem cor em vários sistemas
+            this.fiacao(c, o);
+
         } else {
             const tam = Math.max(o.alt, 46) * 1.25;
 
@@ -568,11 +572,11 @@ class BombeiroEngine {
         this.arred(c, -23, -62, 4, 26, 2); c.fill();
         c.fillStyle = '#475569';
         c.fillRect(-25, -66, 11, 4);
-        // mangueira até a máscara
-        c.strokeStyle = '#1e293b'; c.lineWidth = 2.5; c.lineCap = 'round';
+        // mangueira do cilindro subindo pelo ombro
+        c.strokeStyle = '#1e293b'; c.lineWidth = 2.6; c.lineCap = 'round';
         c.beginPath();
         c.moveTo(-19, -62);
-        c.quadraticCurveTo(-20, -74, -8, -76);
+        c.quadraticCurveTo(-22, -72, -12, -73);
         c.stroke();
 
         /* ---------- PERNA DA FRENTE ---------- */
@@ -602,73 +606,140 @@ class BombeiroEngine {
 
         /* ---------- CABEÇA ---------- */
         // pescoço
-        c.fillStyle = '#d9a87b'; c.fillRect(-4, -72, 8, 6);
+        c.fillStyle = '#d9a87b'; c.fillRect(-3.5, -73, 8, 7);
+
+        // balaclava (touca de proteção) — atrás do rosto
+        c.fillStyle = '#1e293b';
+        c.beginPath(); c.ellipse(-1, -80, 11, 12, 0, 0, Math.PI * 2); c.fill();
 
         // rosto
         c.fillStyle = PELE;
-        c.beginPath(); c.ellipse(1, -78, 10, 11, 0, 0, Math.PI * 2); c.fill();
-        // queixo/mandíbula sombreada
-        c.fillStyle = 'rgba(0,0,0,0.08)';
-        c.beginPath(); c.ellipse(-3, -76, 5, 9, 0, 0, Math.PI * 2); c.fill();
+        c.beginPath(); c.ellipse(2.5, -80, 9, 10.5, 0, 0, Math.PI * 2); c.fill();
+        // sombreado do maxilar
+        c.fillStyle = 'rgba(0,0,0,0.07)';
+        c.beginPath(); c.ellipse(-1, -78, 4.5, 8, 0, 0, Math.PI * 2); c.fill();
 
-        // olho e sobrancelha
+        // sobrancelha, olho, nariz e boca
+        c.strokeStyle = '#6b3410'; c.lineWidth = 1.7; c.lineCap = 'round';
+        c.beginPath(); c.moveTo(4, -85.5); c.lineTo(9, -85); c.stroke();
         c.fillStyle = '#1f2937';
-        c.beginPath(); c.ellipse(5, -79, 1.7, 2.2, 0, 0, Math.PI * 2); c.fill();
-        c.strokeStyle = '#7c3f16'; c.lineWidth = 1.6;
-        c.beginPath(); c.moveTo(2.5, -83); c.lineTo(7.5, -82.5); c.stroke();
-        // boca
-        c.strokeStyle = 'rgba(120,60,30,0.65)'; c.lineWidth = 1.3;
-        c.beginPath(); c.arc(4, -73.5, 2.6, 0.15, Math.PI - 0.6); c.stroke();
-
-        // balaclava cobrindo nuca e orelha
-        c.fillStyle = '#1e293b';
-        c.beginPath(); c.ellipse(-5, -78, 6, 10.5, 0, 0, Math.PI * 2); c.fill();
+        c.beginPath(); c.ellipse(7, -81.5, 1.6, 2.1, 0, 0, Math.PI * 2); c.fill();
+        c.strokeStyle = 'rgba(150,90,50,0.6)'; c.lineWidth = 1.4;
+        c.beginPath(); c.moveTo(10.5, -80); c.lineTo(11, -77); c.stroke();
+        c.strokeStyle = 'rgba(120,60,30,0.7)'; c.lineWidth = 1.4;
+        c.beginPath(); c.arc(6.5, -75, 2.8, 0.1, Math.PI - 0.7); c.stroke();
 
         /* ---------- CAPACETE ---------- */
         // casco
-        const gc = c.createLinearGradient(-14, -96, 14, -84);
-        gc.addColorStop(0, '#ef4444');
-        gc.addColorStop(1, '#b91c1c');
+        const gc = c.createLinearGradient(-13, -100, 13, -88);
+        gc.addColorStop(0, '#f05252');
+        gc.addColorStop(1, '#a91b1b');
         c.fillStyle = gc;
         c.beginPath();
-        c.ellipse(0, -87, 14.5, 12, 0, Math.PI, 0);
+        c.ellipse(0.5, -89, 14, 12.5, 0, Math.PI, 0);
         c.closePath(); c.fill();
-        // crista central
-        c.fillStyle = '#dc2626';
-        this.arred(c, -1.6, -99, 3.2, 13, 1.5); c.fill();
 
-        // aba do capacete (longa atrás, curta na frente)
-        c.fillStyle = '#991b1b';
+        // aba: sobe pela frente e desce longa atrás — nunca cruza o rosto
+        c.fillStyle = '#a91b1b';
         c.beginPath();
-        c.moveTo(-22, -84);
-        c.quadraticCurveTo(0, -79, 17, -85);
-        c.quadraticCurveTo(0, -75.5, -22, -80);
+        c.moveTo(-21, -86);
+        c.quadraticCurveTo(-6, -92, 16, -90.5);       // borda de cima
+        c.quadraticCurveTo(-4, -85.5, -21, -81.5);    // borda de baixo (traseira caída)
         c.closePath(); c.fill();
+        // brilho na aba
+        c.fillStyle = 'rgba(255,255,255,0.18)';
+        c.beginPath();
+        c.moveTo(-19, -86); c.quadraticCurveTo(-6, -91, 14, -89.8);
+        c.quadraticCurveTo(-6, -88, -19, -84.6);
+        c.closePath(); c.fill();
+
+        // crista central
+        c.fillStyle = '#c81e1e';
+        this.arred(c, -1.4, -101.5, 3.4, 13, 1.6); c.fill();
 
         // brasão frontal
         c.fillStyle = '#fbbf24';
         c.beginPath();
-        c.moveTo(9, -95); c.lineTo(14, -88); c.lineTo(9, -85.5); c.lineTo(4, -88);
+        c.moveTo(9.5, -99); c.lineTo(14, -93); c.lineTo(9.5, -90.5); c.lineTo(5, -93);
         c.closePath(); c.fill();
+        c.fillStyle = '#92400e';
+        c.beginPath(); c.arc(9.5, -94.5, 1.5, 0, Math.PI * 2); c.fill();
 
-        // faixa refletiva no capacete
-        c.fillStyle = 'rgba(255,255,255,0.5)';
-        c.fillRect(-13, -88.5, 9, 2.5);
+        // faixa refletiva no casco
+        c.fillStyle = 'rgba(255,255,255,0.45)';
+        c.fillRect(-12, -93, 8, 2.6);
 
-        /* ---------- MÁSCARA / VISEIRA ---------- */
-        c.fillStyle = 'rgba(186, 216, 240, 0.35)';
-        c.beginPath(); c.ellipse(2, -79, 11, 9.5, 0, 0, Math.PI * 2); c.fill();
-        c.strokeStyle = 'rgba(71,85,105,0.85)'; c.lineWidth = 1.6;
-        c.beginPath(); c.ellipse(2, -79, 11, 9.5, 0, 0, Math.PI * 2); c.stroke();
-        // reflexo
-        c.fillStyle = 'rgba(255,255,255,0.4)';
-        c.beginPath(); c.ellipse(6, -83, 3.4, 2.2, -0.5, 0, Math.PI * 2); c.fill();
+        /* ---------- MÁSCARA ERGUIDA NA TESTA ---------- */
+        c.fillStyle = 'rgba(190, 222, 245, 0.42)';
+        this.arred(c, -3, -95, 13, 6, 3); c.fill();
+        c.strokeStyle = 'rgba(51,65,85,0.75)'; c.lineWidth = 1.4;
+        this.arred(c, -3, -95, 13, 6, 3); c.stroke();
 
         /* ---------- BRAÇO DA FRENTE ---------- */
         this.braco(c, 11, -62, passoA, CASACO, PELE, REFLET);
 
         c.restore();
         c.restore();
+    }
+
+    /* Fiação energizada solta, com faíscas */
+    fiacao(c, o) {
+        const L = o.larg, A = o.alt;
+        const t = o.fase;
+
+        // halo elétrico
+        const g = c.createRadialGradient(0, 0, 4, 0, 0, L * 0.75);
+        g.addColorStop(0, 'rgba(125, 211, 252, 0.5)');
+        g.addColorStop(1, 'rgba(56, 189, 248, 0)');
+        c.fillStyle = g;
+        c.beginPath(); c.ellipse(0, 0, L * 0.75, A * 0.9, 0, 0, Math.PI * 2); c.fill();
+
+        // poste/suporte
+        c.strokeStyle = '#57534e'; c.lineWidth = 5; c.lineCap = 'round';
+        c.beginPath(); c.moveTo(-L / 2, -A / 2 - 12); c.lineTo(-L / 2, A / 2); c.stroke();
+
+        // cabo pendurado, balançando
+        const balanco = Math.sin(t * 3) * 4;
+        c.strokeStyle = '#111827'; c.lineWidth = 4.5;
+        c.beginPath();
+        c.moveTo(-L / 2, -A / 2 - 8);
+        c.quadraticCurveTo(0, A / 2 + balanco, L / 2, -A / 2 + 4);
+        c.stroke();
+        // isolamento amarelo pontilhado
+        c.strokeStyle = '#facc15'; c.lineWidth = 2; c.setLineDash([7, 9]);
+        c.beginPath();
+        c.moveTo(-L / 2, -A / 2 - 8);
+        c.quadraticCurveTo(0, A / 2 + balanco, L / 2, -A / 2 + 4);
+        c.stroke();
+        c.setLineDash([]);
+
+        // ponta descascada com faíscas
+        const px = L / 2 - 6, py = -A / 2 + 6;
+        c.fillStyle = '#e2e8f0';
+        c.beginPath(); c.arc(px, py, 3.5, 0, Math.PI * 2); c.fill();
+
+        const fase = Math.floor(t * 10) % 3;
+        c.strokeStyle = '#7dd3fc';
+        c.lineWidth = 2.2;
+        c.shadowColor = '#38bdf8'; c.shadowBlur = 10;
+        for (let i = 0; i < 3; i++) {
+            const ang = (i * 2.1) + fase * 0.9;
+            const r1 = 5, r2 = 13 + (i === fase ? 5 : 0);
+            c.beginPath();
+            c.moveTo(px + Math.cos(ang) * r1, py + Math.sin(ang) * r1);
+            c.lineTo(px + Math.cos(ang + 0.3) * (r1 + r2) / 2, py + Math.sin(ang + 0.3) * (r1 + r2) / 2);
+            c.lineTo(px + Math.cos(ang) * r2, py + Math.sin(ang) * r2);
+            c.stroke();
+        }
+        c.shadowBlur = 0;
+
+        // aviso de agachar
+        c.font = 'bold 17px sans-serif';
+        c.fillStyle = '#fde047';
+        c.textAlign = 'center'; c.textBaseline = 'middle';
+        c.shadowColor = 'rgba(0,0,0,0.9)'; c.shadowBlur = 5;
+        c.fillText('▼', 0, A / 2 + 20);
+        c.shadowBlur = 0;
     }
 
     /* Perna com coxa, canela e bota, articulada pelo passo (-1..1) */
